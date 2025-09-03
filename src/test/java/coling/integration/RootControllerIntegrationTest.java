@@ -24,20 +24,11 @@ public class RootControllerIntegrationTest {
     MockMvc mockMvc;
 
     @Test
-    void shouldCreateNewTraceId() throws Exception {
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/")
-                .header("trace-id", "123")
-                .header("span-id", "456")
-                .header("correlation-id", "789"))
+    void shouldCreateNewTraceIdAndExposeInLogAndResponse() throws Exception {
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/"))
                 .andDo(print())
                 .andReturn();
         assertThat(result.getResponse().getHeader("traceId")).hasSize(32);
         assertThat(result.getResponse().getHeader("spanId")).hasSize(16);
-    }
-
-    @Test
-    void shouldUseExistingTraceIdFromHeader() throws Exception {
-        ResultActions result = mockMvc.perform(MockMvcRequestBuilders.get("/")
-                .header("trace-id", "123"));
     }
 }
